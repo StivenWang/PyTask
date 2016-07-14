@@ -3,8 +3,8 @@
 import socket
 
 sk = socket.socket()
-sk.bind(('127.0.0.1',8001))
-sk.listen(10)
+sk.bind(('127.0.0.1',8002))
+sk.listen()
 
 while True:
     conn,addr = sk.accept()
