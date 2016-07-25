@@ -8,7 +8,7 @@ class auth:
         self.__name = ''
 
 
-    def lashlib_md5(self):
+    def hashlib_md5(self):
         '''
         返回加密后的数据
         :return:
