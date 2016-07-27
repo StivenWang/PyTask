@@ -16,7 +16,7 @@ class MySQL_init:
     '''
 
     def __init__(self):
-        self.url = 'ftp://task:q.123456@ftp.opsdev.tech:43121/mysql'
+        self.url = 'ftp://xxx:xxx@x.x.x.x:port/mysql'
         self.ret = []
         self.compile = []
         self.count = 0
@@ -186,7 +186,7 @@ class MySQL_init:
         print '\r'
         time.sleep(5)
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        ret = sock.connect_ex((self.ip, 3306))
+        ret = sock.connect_ex((self.ip,3306))
         if ret == 0:
             pass
         else:
