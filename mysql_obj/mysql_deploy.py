@@ -16,7 +16,7 @@ class MySQL_init:
     '''
 
     def __init__(self):
-        self.url = 'ftp://xxx:xxx@x.x.x.x:port/mysql'
+        self.url = 'ftp://xxx:xxx@x.x.x.x:port/mysql'           # mysql的编译参数，写入到文件中，放在ftp上
         self.ret = []
         self.compile = []
         self.count = 0
@@ -45,11 +45,11 @@ class MySQL_init:
         for i in self.ret:
             self.count += i
         if self.count == 0:
-            print('#INFO ############### \033[1;32mThe command execution success.\033[0m ###############')
+            print('#INFO ==================== \033[1;32mThe command execution success.\033[0m ====================')
             time.sleep(3)
             return True
         else:
-            print('#INFO ############### \033[1;31mThe command execution failed.\033[0m ###############')
+            print('#INFO ==================== \033[1;31mThe command execution failed.\033[0m ====================')
             time.sleep(3)
             return False
 
@@ -70,7 +70,7 @@ class MySQL_init:
         下载安装包
         :return:False:下载执行失败
         '''
-        print '#INFO ############### \033[1;33m开始下载MySQL安装包\033[0m ###############'
+        print '#INFO ==================== \033[1;33mBegan to download MySQL installation package\033[0m ===================='
         time.sleep(3)
         try:
             os.makedirs('/home/tools')
@@ -87,12 +87,12 @@ class MySQL_init:
         添加账号
         :return:True:账号已存在 False:账号添加失败
         '''
-        print '#INFO ############### \033[1;33m开始建立MySQL账号\033[0m ###############'
+        print '#INFO ==================== \033[1;33mBegin creating MySQL account\033[0m ===================='
         time.sleep(3)
         self.acc = raw_input('请输入要创建账号名:').strip()
         self.status = subprocess.call('id %s > /dev/null 2>1' %self.acc,shell=True)
         if self.status == 0:
-            print('#INFO ############### \033[1;32mThe command execution success.\033[0m ###############')
+            print('#INFO ==================== \033[1;32mThe command execution success.\033[0m ====================')
             time.sleep(3)
             return True
         else:
@@ -107,7 +107,7 @@ class MySQL_init:
         配置mysql安装环境
         :return:
         '''
-        print '#INFO ############### \033[1;33m开始配置MySQL安装环境\033[0m ###############'
+        print '#INFO ==================== \033[1;33mStart configuring the MySQL installation environment\033[0m ===================='
         time.sleep(3)
         self.install_path = raw_input('请输入一个不存在的目录(安装目录):').strip()
         self.data_path = raw_input('请输入一个不存在的目录(数据存放目录):').strip()
@@ -138,7 +138,7 @@ class MySQL_init:
         安装MySQL
         :return:
         '''
-        print '#INFO ############### \033[1;33m开始安装MySQL\033[0m ###############'
+        print '#INFO ==================== \033[1;33mStart installing MySQL\033[0m ===================='
         time.sleep(3)
         os.chdir('/home/tools')
         self.install_cmd('tar zxf mysql-5.5.50.tar.gz')
@@ -154,7 +154,7 @@ class MySQL_init:
         rets = subprocess.call('cmake %s' % self.compile, shell=True)
         vals = subprocess.call('make -j 2 && make install', shell=True)
         if rets == vals == 0:
-            return True
+            pass
         else:
             return False
         os.remove('compile.conf')
@@ -166,7 +166,7 @@ class MySQL_init:
         初始化mysql
         :return:
         '''
-        print '#INFO ############### \033[1;33m开始初始化MySQL\033[0m ###############'
+        print '#INFO ==================== \033[1;33mStart initialized MySQL\033[0m ===================='
         time.sleep(3)
         self.install_cmd("echo 'export PATH={ins_path}/bin:$PATH' >>/etc/profile".format(ins_path=self.install_path))
         self.install_cmd('source /etc/profile')
@@ -181,13 +181,12 @@ class MySQL_init:
         启动MySQL
         :return:
         '''
-        print '#INFO ############### \033[1;33m开始启动MySQL\033[0m ###############'
+        print '#INFO ==================== \033[1;33mStarting MySQL...\033[0m ===================='
         self.install_cmd('{path}/bin/mysqld_safe --user={user} &'.format(path=self.install_path, user=self.acc))
         print '\r'
         time.sleep(5)
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        ret = sock.connect_ex((self.ip,3306))
-        if ret == 0:
+        rests = self.install_cmd('netstat -an | grep 3306 >/dev/null')
+        if rests == 0:
             pass
         else:
             return False
@@ -197,8 +196,7 @@ class MySQL_init:
         if self.install_check() == False:
             return False
         else:
-            print '\033[1;33m#INFO 命令执行结果 \033[0m: %s'%self.ret
-            print '\033[1;32m#INFO MySQL 安装成功.\033[0m'
+            print '#INFO \033[1;32mMySQL installation was successful.\033[0m'
 
 
     def main(self):
