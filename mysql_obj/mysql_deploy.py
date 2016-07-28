@@ -129,7 +129,7 @@ class MySQL_init:
         # self.ip = socket.gethostbyname(socket.gethostname())      # 不知怎么回事，不同linux OS,有时可以获取到IP，有时会报‘socket.gaierror’错误
         self.ip = MySQL_init.get_local_ip()
         with open('/etc/hosts', 'a') as f:
-            f.write('\n{ip}\t{hostname}'.format(ip=self.ip, hostname=self.hostname))
+            f.write('{ip}\t{hostname}'.format(ip=self.ip, hostname=self.hostname))
 
 
 
