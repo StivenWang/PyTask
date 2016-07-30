@@ -16,7 +16,7 @@ class MySQL_init:
     '''
 
     def __init__(self):
-        self.url = 'ftp://xxx:xxx@x.x.x.x:port/mysql'           # mysql的编译参数，写入到文件中，放在ftp上
+        self.url = 'ftp://task:q.123456@ftp.opsdev.tech:43121/mysql'           # mysql的编译参数，写入到文件中，放在ftp上
         self.ret = []
         self.compile = []
         self.count = 0
@@ -152,6 +152,7 @@ class MySQL_init:
         self.status = ' '
         self.compile = self.status.join(self.compile)
         rets = subprocess.call('cmake %s' % self.compile, shell=True)
+        time.sleep(3)
         vals = subprocess.call('make -j 2 && make install', shell=True)
         if rets == vals == 0:
             pass
@@ -169,7 +170,6 @@ class MySQL_init:
         print '#INFO ==================== \033[1;33mStart initialized MySQL\033[0m ===================='
         time.sleep(3)
         self.install_cmd("echo 'export PATH={ins_path}/bin:$PATH' >>/etc/profile".format(ins_path=self.install_path))
-        self.install_cmd('source /etc/profile')
         shutil.copyfile('support-files/my-small.cnf', '/etc/my.cnf')
         self.install_cmd('{path1}/scripts/mysql_install_db --basedir={path1} --datadir={path2} --user={user}'.format(path1=self.install_path, path2=self.data_path, user=self.acc))
         if self.install_check() == False:
@@ -185,6 +185,7 @@ class MySQL_init:
         self.install_cmd('{path}/bin/mysqld_safe --user={user} &'.format(path=self.install_path, user=self.acc))
         print '\r'
         time.sleep(5)
+        self.install_cmd('source /etc/profile')
         rests = self.install_cmd('netstat -an | grep 3306 >/dev/null')
         if rests == 0:
             pass
